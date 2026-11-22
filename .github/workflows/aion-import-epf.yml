@@ -34,7 +34,6 @@ jobs:
             --name AION_Import \
             --synonym "AION: импорт прайсов" \
             --bsl examples/aion_import/ИмпортПрайсаФорма.bsl \
-            --form-spec examples/aion_import/form_spec.json \
             --output dist/AION_Import.epf \
             --save-sources \
             --skip-bsl-validation
