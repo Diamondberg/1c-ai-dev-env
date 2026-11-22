@@ -1,0 +1,50 @@
+name: AION Import EPF build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/aion-import-epf
+    paths:
+      - 'examples/aion_import/**'
+      - '.github/workflows/aion-import-epf.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install builder
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+      - name: Build external 1C processing
+        run: |
+          mkdir -p dist
+          1c-ai epf-factory create \
+            --name AION_Import \
+            --synonym "AION: импорт прайсов" \
+            --bsl examples/aion_import/ИмпортПрайсаФорма.bsl \
+            --form-spec examples/aion_import/form_spec.json \
+            --output dist/AION_Import.epf \
+            --save-sources \
+            --skip-bsl-validation
+      - name: Verify output
+        run: |
+          test -s dist/AION_Import.epf
+          ls -lh dist/AION_Import.epf
+      - name: Upload EPF
+        uses: actions/upload-artifact@v4
+        with:
+          name: AION_Import_EPF
+          path: dist/AION_Import.epf
+          retention-days: 7
