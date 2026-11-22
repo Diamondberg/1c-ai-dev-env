@@ -1,0 +1,51 @@
+name: AION EPF minimal smoke test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/aion-import-epf
+    paths:
+      - 'examples/aion_import/SmokeTest.bsl'
+      - '.github/workflows/aion-epf-smoke.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install EPF factory
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+      - name: Build empty-form smoke EPF
+        run: |
+          mkdir -p dist
+          1c-ai epf-factory create \
+            --name AION_SmokeTest \
+            --synonym "AION: проверка формата EPF" \
+            --bsl examples/aion_import/SmokeTest.bsl \
+            --output dist/AION_SmokeTest.epf \
+            --skip-bsl-validation
+      - name: Check generated container
+        run: |
+          test -s dist/AION_SmokeTest.epf
+          ls -lh dist/AION_SmokeTest.epf
+          sha256sum dist/AION_SmokeTest.epf > dist/SHA256SUMS.txt
+      - name: Publish smoke EPF
+        uses: actions/upload-artifact@v4
+        with:
+          name: AION_SmokeTest_EPF
+          path: |
+            dist/AION_SmokeTest.epf
+            dist/SHA256SUMS.txt
+          retention-days: 7
