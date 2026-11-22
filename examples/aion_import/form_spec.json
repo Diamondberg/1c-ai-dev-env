@@ -1,0 +1,54 @@
+{
+  "props": [
+    {
+      "name": "Объект",
+      "type": "DataProcessorObject"
+    },
+    {
+      "name": "ПоставщикИмя",
+      "type": "String",
+      "length": 150,
+      "synonym": "Поставщик"
+    },
+    {
+      "name": "Предпросмотр",
+      "type": "ValueTable",
+      "synonym": "Предпросмотр",
+      "columns": [
+        {
+          "name": "Артикул",
+          "type": "String",
+          "length": 150
+        },
+        {
+          "name": "Наименование",
+          "type": "String",
+          "length": 500
+        },
+        {
+          "name": "РРЦ",
+          "type": "Number",
+          "digits": 15,
+          "fraction": 2
+        },
+        {
+          "name": "Опт",
+          "type": "Number",
+          "digits": 15,
+          "fraction": 2
+        },
+        {
+          "name": "ОстатокПоставщика",
+          "type": "Number",
+          "digits": 15,
+          "fraction": 3
+        },
+        {
+          "name": "Статус",
+          "type": "String",
+          "length": 200
+        }
+      ]
+    }
+  ]
+}
